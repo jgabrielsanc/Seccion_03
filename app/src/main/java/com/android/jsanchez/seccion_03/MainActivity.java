@@ -7,14 +7,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private List<String> names;
+    private List<Movie> movies;
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
@@ -27,15 +26,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        names = getAllNames();
+        movies = getAllMovies();
 
         recyclerView = findViewById(R.id.recyclerView);
         layoutManager = new LinearLayoutManager(this);
-        adapter = new MyAdapter(names, R.layout.recycler_view_item, new MyAdapter.onItemClickListener() {
+        adapter = new MyAdapter(movies, R.layout.recycler_view_item, new MyAdapter.onItemClickListener() {
             @Override
-            public void onItemClick(String name, int position) {
+            public void onItemClick(Movie movie, int position) {
 
-                deleteName(position);
+                removeMovie(position);
 //                Toast.makeText(MainActivity.this, name + " - " + position, Toast.LENGTH_SHORT).show();
             }
         });
@@ -59,7 +58,10 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
 
             case R.id.add_name:
-                this.addNames(0);
+                // Agregar al final de la lista
+                this.addMovie(movies.size());
+                // Agregar al inicio de la lista
+//                this.addMovie(0);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -67,25 +69,23 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void addNames(int position) {
-        names.add(position, "New name " + (++counter));
+    private void addMovie(int position) {
+        movies.add(position, new Movie("New image " + (++counter), R.drawable.newmovie));
         adapter.notifyItemInserted(position);
         layoutManager.scrollToPosition(position);
     }
 
-    private void deleteName(int position) {
-        names.remove(position);
+    private void removeMovie(int position) {
+        movies.remove(position);
         adapter.notifyItemRemoved(position);
     }
 
-    private List<String> getAllNames() {
-        return new ArrayList<String>() {{
-            add("Jesus");
-            add("Maria");
-            add("Jose");
-            add("Carla");
-            add("Marta");
-            add("Luis");
+    private List<Movie> getAllMovies() {
+        return new ArrayList<Movie>() {{
+            add(new Movie("Ben Hur", R.drawable.benhur));
+            add(new Movie("DeadPool", R.drawable.deadpool));
+            add(new Movie("Guardians of Galaxy", R.drawable.guardians));
+            add(new Movie("Warcratf", R.drawable.warcraft));
         }};
     }
 }
